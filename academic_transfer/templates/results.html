@@ -1,119 +1,119 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>📊 Результаты сопоставления</h2>
+<h2>Результаты сопоставления</h2>
 
 {% if stats %}
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 2em;">{{ stats.total_transcript }}</div>
-        <div>Всего дисциплин в ведомости</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 30px;">
+    <div class="stat-card">
+        <div class="stat-number">{{ stats.total_transcript }}</div>
+        <div class="stat-label">Всего дисциплин в ведомости</div>
     </div>
-    <div style="background: #28a745; color: white; padding: 15px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 2em;">{{ stats.recreditable }}</div>
-        <div>Перезачитываются</div>
+    <div class="stat-card" style="border-left: 3px solid #27ae60;">
+        <div class="stat-number" style="color: #27ae60;">{{ stats.recreditable }}</div>
+        <div class="stat-label">Перезачитываются</div>
     </div>
-    <div style="background: #ffc107; color: #333; padding: 15px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 2em;">{{ stats.reattestation }}</div>
-        <div>На переаттестацию</div>
+    <div class="stat-card" style="border-left: 3px solid #f39c12;">
+        <div class="stat-number" style="color: #f39c12;">{{ stats.reattestation }}</div>
+        <div class="stat-label">На переаттестацию</div>
     </div>
-    <div style="background: #dc3545; color: white; padding: 15px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 2em;">{{ stats.need_study }}</div>
-        <div>Требуют изучения</div>
+    <div class="stat-card" style="border-left: 3px solid #e74c3c;">
+        <div class="stat-number" style="color: #e74c3c;">{{ stats.need_study }}</div>
+        <div class="stat-label">Требуют изучения</div>
     </div>
 </div>
 {% endif %}
 
-<div style="margin-top: 30px;">
+<div style="margin-top: 24px;">
     <!-- Перезачитываются -->
-    <div style="margin-bottom: 40px;">
-        <h3 style="color: #28a745; border-bottom: 2px solid #28a745; padding-bottom: 10px;">✅ Перезачитываются ({{ results.recreditable|length }})</h3>
+    <div style="margin-bottom: 32px;">
+        <h3 style="color: #27ae60; border-bottom: 2px solid #27ae60; padding-bottom: 8px;">Перезачитываются ({{ results.recreditable|length }})</h3>
         {% if results.recreditable %}
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+        <table>
             <thead>
-                <tr style="background: #f8f9fa;">
-                    <th style="padding: 12px; text-align: left;">Название дисциплины</th>
-                    <th style="padding: 12px; text-align: left;">Оценка</th>
-                    <th style="padding: 12px; text-align: left;">Часы/Кредиты</th>
-                    <th style="padding: 12px; text-align: left;">Сопоставлено с</th>
+                <tr>
+                    <th>Название дисциплины</th>
+                    <th>Оценка</th>
+                    <th>Часы или кредиты</th>
+                    <th>Сопоставлено с</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in results.recreditable %}
-                <tr style="border-bottom: 1px solid #ddd;">
-                    <td style="padding: 10px;">{{ item.name }}</td>
-                    <td style="padding: 10px;"><span class="status-badge status-success">{{ item.grade }}</span></td>
-                    <td style="padding: 10px;">{{ item.hours or '-' }}</td>
-                    <td style="padding: 10px;">{{ item.matched_to }}</td>
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td><span class="status-badge status-success">{{ item.grade }}</span></td>
+                    <td>{{ item.hours or '-' }}</td>
+                    <td>{{ item.matched_to }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p style="color: #666; padding: 20px;">Нет дисциплин для перезачета</p>
+        <p style="color: #6c7a8a; padding: 16px;">Нет дисциплин для перезачета</p>
         {% endif %}
     </div>
     
     <!-- На переаттестацию -->
-    <div style="margin-bottom: 40px;">
-        <h3 style="color: #ffc107; border-bottom: 2px solid #ffc107; padding-bottom: 10px;">🔄 На переаттестацию ({{ results.reattestation|length }})</h3>
+    <div style="margin-bottom: 32px;">
+        <h3 style="color: #f39c12; border-bottom: 2px solid #f39c12; padding-bottom: 8px;">На переаттестацию ({{ results.reattestation|length }})</h3>
         {% if results.reattestation %}
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+        <table>
             <thead>
-                <tr style="background: #f8f9fa;">
-                    <th style="padding: 12px; text-align: left;">Название дисциплины</th>
-                    <th style="padding: 12px; text-align: left;">Исходная оценка</th>
-                    <th style="padding: 12px; text-align: left;">Часы/Кредиты</th>
-                    <th style="padding: 12px; text-align: left;">Сопоставлено с</th>
+                <tr>
+                    <th>Название дисциплины</th>
+                    <th>Исходная оценка</th>
+                    <th>Часы или кредиты</th>
+                    <th>Сопоставлено с</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in results.reattestation %}
-                <tr style="border-bottom: 1px solid #ddd;">
-                    <td style="padding: 10px;">{{ item.name }}</td>
-                    <td style="padding: 10px;"><span class="status-badge status-warning">{{ item.grade }}</span></td>
-                    <td style="padding: 10px;">{{ item.hours or '-' }}</td>
-                    <td style="padding: 10px;">{{ item.matched_to }}</td>
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td><span class="status-badge status-warning">{{ item.grade }}</span></td>
+                    <td>{{ item.hours or '-' }}</td>
+                    <td>{{ item.matched_to }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p style="color: #666; padding: 20px;">Нет дисциплин на переаттестацию</p>
+        <p style="color: #6c7a8a; padding: 16px;">Нет дисциплин на переаттестацию</p>
         {% endif %}
     </div>
     
     <!-- Требуют изучения -->
-    <div style="margin-bottom: 40px;">
-        <h3 style="color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">📚 Требуют изучения ({{ results.need_study|length }})</h3>
+    <div style="margin-bottom: 32px;">
+        <h3 style="color: #e74c3c; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">Требуют изучения ({{ results.need_study|length }})</h3>
         {% if results.need_study %}
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+        <table>
             <thead>
-                <tr style="background: #f8f9fa;">
-                    <th style="padding: 12px; text-align: left;">Название дисциплины</th>
-                    <th style="padding: 12px; text-align: left;">Часы/Кредиты</th>
-                    <th style="padding: 12px; text-align: left;">Примечание</th>
+                <tr>
+                    <th>Название дисциплины</th>
+                    <th>Часы или кредиты</th>
+                    <th>Примечание</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in results.need_study %}
-                <tr style="border-bottom: 1px solid #ddd;">
-                    <td style="padding: 10px;">{{ item.name }}</td>
-                    <td style="padding: 10px;">{{ item.hours or '-' }}</td>
-                    <td style="padding: 10px; color: #666;">Дисциплина отсутствует в ведомости</td>
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.hours or '-' }}</td>
+                    <td style="color: #6c7a8a;">Дисциплина отсутствует в ведомости</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p style="color: #666; padding: 20px;">Нет дисциплин, требующих изучения</p>
+        <p style="color: #6c7a8a; padding: 16px;">Нет дисциплин, требующих изучения</p>
         {% endif %}
     </div>
 </div>
 
-<div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-    <a href="{{ url_for('export_results') }}" class="btn">💾 Сохранить результат (CSV)</a>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">🏠 На главную</a>
-    <a href="{{ url_for('manual_matching') }}" class="btn btn-secondary">✏️ Вернуться к ручному сопоставлению</a>
+<div style="text-align: center; margin-top: 24px; padding: 20px; background: #f8f9fc; border-radius: 8px; border: 1px solid #e0e7f0;">
+    <a href="{{ url_for('export_results') }}" class="btn">Сохранить результат (CSV)</a>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">На главную</a>
+    <a href="{{ url_for('manual_matching') }}" class="btn btn-secondary">Ручное сопоставление</a>
 </div>
 {% endblock %}

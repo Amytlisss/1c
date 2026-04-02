@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>✏️ Ручное сопоставление дисциплин</h2>
+<h2>Ручное сопоставление дисциплин</h2>
 
 {% if disciplines %}
 <div class="alert alert-info">
-    <strong>ℹ️ Информация:</strong> Найдено {{ total_count }} дисциплин, требующих ручного сопоставления.
-    Для каждой дисциплины выберите соответствующую из учебного плана или отметьте как "Требует изучения".
+    Найдено {{ total_count }} дисциплин, требующих ручного сопоставления.
+    Для каждой дисциплины выберите соответствующую из учебного плана.
 </div>
 
-<div style="margin-top: 30px;">
+<div style="margin-top: 24px;">
     {% for item in disciplines %}
-    <div class="manual-item" id="row-{{ item.id }}" style="border: 1px solid #ddd; margin-bottom: 20px; padding: 15px; border-radius: 8px; background: #f9f9f9;">
+    <div class="manual-item" id="row-{{ item.id }}" style="border: 1px solid #d0d7e5; margin-bottom: 16px; padding: 16px; border-radius: 8px; background: #fafbfd;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
-                <h4>📖 Дисциплина из ведомости:</h4>
+                <h4 style="color: #2c3e50; margin-bottom: 12px;">Дисциплина из ведомости</h4>
                 <p><strong>{{ item.name }}</strong></p>
                 <p>Оценка: <span class="status-badge status-info">{{ item.grade or 'не указана' }}</span></p>
-                <p>Часы/кредиты: {{ item.hours or 'не указано' }}</p>
+                <p>Часы или кредиты: {{ item.hours or 'не указано' }}</p>
             </div>
             <div>
-                <h4>🎯 Выберите сопоставление:</h4>
-                <select id="select-{{ item.id }}" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                <h4 style="color: #2c3e50; margin-bottom: 12px;">Выберите сопоставление</h4>
+                <select id="select-{{ item.id }}" style="width: 100%; padding: 8px; margin-bottom: 12px;">
                     <option value="">-- Выберите дисциплину из учебного плана --</option>
                     {% if item.possible_matches %}
-                    <optgroup label="⭐ Рекомендуемые совпадения">
+                    <optgroup label="Рекомендуемые совпадения">
                         {% for match in item.possible_matches %}
                         <option value="{{ match.id }}" data-similarity="{{ match.similarity }}">
                             {{ match.name }} (совпадение: {{ (match.similarity * 100)|int }}%) 
@@ -33,7 +33,7 @@
                         {% endfor %}
                     </optgroup>
                     {% endif %}
-                    <optgroup label="📚 Все дисциплины">
+                    <optgroup label="Все дисциплины">
                         {% for curr in item.all_curriculum %}
                         <option value="{{ curr.id }}">
                             {{ curr.name }}{% if curr.hours %} ({{ curr.hours }} ч.){% endif %}
@@ -41,32 +41,31 @@
                         {% endfor %}
                     </optgroup>
                 </select>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button onclick="matchDiscipline({{ item.id }})" class="btn" style="flex: 1;">✅ Сохранить сопоставление</button>
-                    <button onclick="markAsStudy({{ item.id }})" class="btn btn-secondary" style="flex: 1;">📚 Требует изучения</button>
-                    <button onclick="skipDiscipline({{ item.id }})" class="btn btn-secondary" style="flex: 1;">⏭️ Пропустить</button>
+                <div style="display: flex; gap: 10px; margin-top: 12px;">
+                    <button onclick="matchDiscipline('{{ item.id }}')" class="btn" style="flex: 1;">Сохранить</button>
+                    <button onclick="markAsStudy('{{ item.id }}')" class="btn btn-secondary" style="flex: 1;">Требует изучения</button>
                 </div>
             </div>
         </div>
     </div>
     {% endfor %}
     
-    <div style="text-align: center; margin-top: 30px; padding: 20px;">
-        <a href="{{ url_for('results') }}" class="btn">📊 Перейти к результатам</a>
+    <div style="text-align: center; margin-top: 24px; padding: 16px;">
+        <a href="{{ url_for('results') }}" class="btn">Перейти к результатам</a>
     </div>
 </div>
 {% else %}
 <div class="alert alert-success">
-    <strong>✅ Отлично!</strong> Все дисциплины успешно сопоставлены! Перейдите к результатам.
+    Все дисциплины успешно сопоставлены. Перейдите к результатам.
 </div>
 <div style="text-align: center; margin-top: 20px;">
-    <a href="{{ url_for('results') }}" class="btn">📊 Просмотреть результаты</a>
+    <a href="{{ url_for('results') }}" class="btn">Просмотреть результаты</a>
 </div>
 {% endif %}
 
 <script>
 function matchDiscipline(transcriptId) {
-    const select = document.getElementById(`select-${transcriptId}`);
+    const select = document.getElementById('select-' + transcriptId);
     const curriculumId = select.value;
     
     if (!curriculumId) {
@@ -83,7 +82,7 @@ function matchDiscipline(transcriptId) {
         },
         body: JSON.stringify({
             action: 'match',
-            transcript_id: transcriptId,
+            transcript_id: parseInt(transcriptId),
             curriculum_id: parseInt(curriculumId)
         })
     })
@@ -92,7 +91,7 @@ function matchDiscipline(transcriptId) {
         hideLoading();
         if (data.success) {
             showMessage(data.message, 'success');
-            document.getElementById(`row-${transcriptId}`).style.opacity = '0.5';
+            document.getElementById('row-' + transcriptId).style.opacity = '0.5';
             setTimeout(() => location.reload(), 1000);
         } else {
             showMessage('Ошибка: ' + (data.message || 'При сохранении'), 'error');
@@ -105,7 +104,7 @@ function matchDiscipline(transcriptId) {
 }
 
 function markAsStudy(transcriptId) {
-    if (!confirm('Отметить эту дисциплину как "требует изучения"?')) {
+    if (!confirm('Отметить эту дисциплину как требующую изучения?')) {
         return;
     }
     
@@ -118,7 +117,7 @@ function markAsStudy(transcriptId) {
         },
         body: JSON.stringify({
             action: 'study',
-            transcript_id: transcriptId
+            transcript_id: parseInt(transcriptId)
         })
     })
     .then(response => response.json())
@@ -126,41 +125,7 @@ function markAsStudy(transcriptId) {
         hideLoading();
         if (data.success) {
             showMessage(data.message, 'success');
-            document.getElementById(`row-${transcriptId}`).style.opacity = '0.5';
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showMessage('Ошибка: ' + (data.message || 'При сохранении'), 'error');
-        }
-    })
-    .catch(error => {
-        hideLoading();
-        showMessage('Ошибка при сохранении', 'error');
-    });
-}
-
-function skipDiscipline(transcriptId) {
-    if (!confirm('Пропустить эту дисциплину? Она будет добавлена в список "Требует решения".')) {
-        return;
-    }
-    
-    showLoading();
-    
-    fetch('/manual_matching', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            action: 'skip',
-            transcript_id: transcriptId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        hideLoading();
-        if (data.success) {
-            showMessage(data.message, 'success');
-            document.getElementById(`row-${transcriptId}`).style.opacity = '0.5';
+            document.getElementById('row-' + transcriptId).style.opacity = '0.5';
             setTimeout(() => location.reload(), 1000);
         } else {
             showMessage('Ошибка: ' + (data.message || 'При сохранении'), 'error');
@@ -175,14 +140,11 @@ function skipDiscipline(transcriptId) {
 
 <style>
 .manual-item:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s;
 }
 optgroup {
-    font-weight: bold;
-}
-option {
-    padding: 5px;
+    font-weight: 600;
 }
 </style>
 {% endblock %}

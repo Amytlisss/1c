@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #eef2f7;
             min-height: 100vh;
             padding: 20px;
         }
@@ -21,80 +21,89 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1a5276;
             color: white;
-            padding: 30px;
+            padding: 24px 30px;
             text-align: center;
+            border-bottom: 3px solid #2980b9;
         }
         
         .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            font-weight: 500;
+            margin-bottom: 8px;
         }
         
         .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 0.95em;
+            opacity: 0.85;
         }
         
         .nav {
-            background: #f8f9fa;
-            padding: 15px 30px;
-            border-bottom: 1px solid #e0e0e0;
+            background: #2c3e50;
+            padding: 12px 30px;
+            border-bottom: 1px solid #34495e;
         }
         
         .nav a {
-            color: #667eea;
+            color: #ecf0f1;
             text-decoration: none;
-            margin-right: 20px;
-            padding: 8px 16px;
-            border-radius: 5px;
-            transition: all 0.3s;
+            margin-right: 24px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
             display: inline-block;
+            font-size: 14px;
         }
         
         .nav a:hover {
-            background: #667eea;
+            background: #2980b9;
             color: white;
         }
         
         .content {
             padding: 30px;
+            min-height: 500px;
         }
         
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #2980b9;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.2s;
+            font-size: 14px;
+            transition: background 0.2s;
             display: inline-block;
             text-decoration: none;
-            margin: 5px;
+            margin: 4px;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
+            background: #1a5276;
         }
         
         .btn-secondary {
-            background: #6c757d;
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
         }
         
         .alert {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border-radius: 4px;
             margin-bottom: 20px;
+            font-size: 14px;
         }
         
         .alert-success {
@@ -115,33 +124,42 @@
             border: 1px solid #bee5eb;
         }
         
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 16px;
+            font-size: 14px;
         }
         
         th, td {
-            padding: 12px;
+            padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
         }
         
         th {
-            background: #f8f9fa;
+            background: #f5f7fa;
             font-weight: 600;
-            color: #333;
+            color: #2c3e50;
+            border-bottom: 2px solid #d0d7e5;
         }
         
         tr:hover {
-            background: #f5f5f5;
+            background: #f8f9fc;
         }
         
         .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
         }
         
         .status-success {
@@ -160,10 +178,11 @@
         }
         
         select {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 6px 10px;
+            border: 1px solid #bdc3c7;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 13px;
+            background: white;
         }
         
         .loading {
@@ -174,9 +193,10 @@
             transform: translate(-50%, -50%);
             background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 1000;
+            text-align: center;
         }
         
         @keyframes spin {
@@ -185,31 +205,76 @@
         }
         
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 3px solid #ecf0f1;
+            border-top: 3px solid #2980b9;
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        .stat-card {
+            background: #f8f9fc;
+            border: 1px solid #e0e7f0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
+        
+        input[type="file"] {
+            font-size: 13px;
+            padding: 6px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-weight: 500;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            font-weight: 500;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e0e7f0;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 Автоматизация процессов перевода и восстановления студентов</h1>
+            <h1>Автоматизация процессов перевода и восстановления студентов</h1>
             <p>Ярославский государственный технический университет</p>
         </div>
         
         <div class="nav">
-            <a href="{{ url_for('index') }}">🏠 Главная</a>
-            <a href="{{ url_for('upload') }}">📤 Загрузка данных</a>
+            <a href="{{ url_for('index') }}">Главная</a>
+            <a href="{{ url_for('upload') }}">Загрузка данных</a>
             {% if session.get('match_results') %}
-            <a href="{{ url_for('manual_matching') }}">✏️ Ручное сопоставление</a>
-            <a href="{{ url_for('results') }}">📊 Результаты</a>
+            <a href="{{ url_for('manual_matching') }}">Ручное сопоставление</a>
+            <a href="{{ url_for('results') }}">Результаты</a>
             {% endif %}
-            <a href="{{ url_for('reset') }}" onclick="return confirm('Вы уверены? Все данные будут потеряны.')">🔄 Начать заново</a>
+            <a href="{{ url_for('reset') }}" onclick="return confirm('Вы уверены? Все данные будут потеряны.')">Начать заново</a>
         </div>
         
         <div class="content">
@@ -232,7 +297,7 @@
         }
         
         function showMessage(message, type) {
-            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            const alertClass = type === 'success' ? 'alert-success' : (type === 'error' ? 'alert-error' : 'alert-info');
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert ${alertClass}`;
             alertDiv.innerHTML = message;

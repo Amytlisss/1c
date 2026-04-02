@@ -1,61 +1,61 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>📁 Загрузка данных</h2>
+<h2>Загрузка данных</h2>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 24px;">
     <!-- Загрузка учебного плана -->
-    <div style="border: 2px dashed #ddd; padding: 20px; border-radius: 10px;">
-        <h3>📖 Учебный план</h3>
-        <p style="color: #666; margin: 10px 0;">Форматы: XLSX, CSV</p>
+    <div style="border: 1px solid #d0d7e5; padding: 20px; border-radius: 8px; background: #fafbfd;">
+        <h3>Учебный план</h3>
+        <p style="color: #6c7a8a; margin: 8px 0; font-size: 13px;">Форматы: XLSX, CSV</p>
         
         <div id="curriculumStatus">
             {% if curriculum_loaded %}
             <div class="alert alert-success">
-                ✅ Учебный план загружен<br>
+                Учебный план загружен<br>
                 Количество дисциплин: {{ curriculum_count }}
             </div>
             {% else %}
             <div class="alert alert-info">
-                ⏳ Учебный план не загружен
+                Учебный план не загружен
             </div>
             {% endif %}
         </div>
         
-        <input type="file" id="curriculumFile" accept=".xlsx,.csv" style="margin: 10px 0;">
-        <button onclick="uploadCurriculum()" class="btn">Загрузить учебный план</button>
+        <input type="file" id="curriculumFile" accept=".xlsx,.csv" style="margin: 10px 0; width: 100%;">
+        <button onclick="uploadCurriculum()" class="btn" style="width: 100%;">Загрузить учебный план</button>
     </div>
     
     <!-- Загрузка ведомости -->
-    <div style="border: 2px dashed #ddd; padding: 20px; border-radius: 10px;">
-        <h3>📊 Ведомость с оценками</h3>
-        <p style="color: #666; margin: 10px 0;">Форматы: XLSX, CSV</p>
+    <div style="border: 1px solid #d0d7e5; padding: 20px; border-radius: 8px; background: #fafbfd;">
+        <h3>Ведомость с оценками</h3>
+        <p style="color: #6c7a8a; margin: 8px 0; font-size: 13px;">Форматы: XLSX, CSV</p>
         
         <div id="transcriptStatus">
             {% if transcript_loaded %}
             <div class="alert alert-success">
-                ✅ Ведомость загружена<br>
+                Ведомость загружена<br>
                 Количество дисциплин: {{ transcript_count }}
             </div>
             {% else %}
             <div class="alert alert-info">
-                ⏳ Ведомость не загружена
+                Ведомость не загружена
             </div>
             {% endif %}
         </div>
         
-        <input type="file" id="transcriptFile" accept=".xlsx,.csv" style="margin: 10px 0;">
-        <button onclick="uploadTranscript()" class="btn">Загрузить ведомость</button>
+        <input type="file" id="transcriptFile" accept=".xlsx,.csv" style="margin: 10px 0; width: 100%;">
+        <button onclick="uploadTranscript()" class="btn" style="width: 100%;">Загрузить ведомость</button>
     </div>
 </div>
 
-<!-- Кнопки навигации - показываются только когда оба файла загружены -->
+<!-- Кнопки навигации -->
 <div id="navigationButtons" style="text-align: center; margin-top: 30px; {% if not (curriculum_loaded and transcript_loaded) %}display: none;{% endif %}">
     <div class="alert alert-success" style="margin-bottom: 20px;">
-        🎉 Оба файла загружены! Перейдите к сопоставлению.
+        Оба файла загружены. Перейдите к сопоставлению.
     </div>
-    <a href="{{ url_for('manual_matching') }}" class="btn">✏️ Ручное сопоставление</a>
-    <a href="{{ url_for('results') }}" class="btn">📊 Просмотреть результаты</a>
+    <a href="{{ url_for('manual_matching') }}" class="btn">Ручное сопоставление</a>
+    <a href="{{ url_for('results') }}" class="btn">Просмотреть результаты</a>
 </div>
 
 <script>
@@ -82,15 +82,12 @@ function uploadCurriculum() {
         hideLoading();
         if (data.success) {
             showMessage(data.message, 'success');
-            // Обновляем статус учебного плана
             document.getElementById('curriculumStatus').innerHTML = `
                 <div class="alert alert-success">
-                    ✅ Учебный план загружен<br>
+                    Учебный план загружен<br>
                     Количество дисциплин: ${data.count}
                 </div>
             `;
-            
-            // Проверяем, загружены ли оба файла
             checkBothFilesLoaded();
         } else {
             showMessage('Ошибка: ' + data.message, 'error');
@@ -125,15 +122,12 @@ function uploadTranscript() {
         hideLoading();
         if (data.success) {
             showMessage(data.message, 'success');
-            // Обновляем статус ведомости
             document.getElementById('transcriptStatus').innerHTML = `
                 <div class="alert alert-success">
-                    ✅ Ведомость загружена<br>
+                    Ведомость загружена<br>
                     Количество дисциплин: ${data.count}
                 </div>
             `;
-            
-            // Проверяем, загружены ли оба файла
             checkBothFilesLoaded();
         } else {
             showMessage('Ошибка: ' + data.message, 'error');
@@ -146,15 +140,12 @@ function uploadTranscript() {
 }
 
 function checkBothFilesLoaded() {
-    // Получаем статус загрузки файлов
     fetch('/get_status')
         .then(response => response.json())
         .then(data => {
             if (data.curriculum_loaded && data.transcript_loaded) {
-                // Показываем кнопки навигации
                 document.getElementById('navigationButtons').style.display = 'block';
-                // Показываем сообщение об успехе
-                showMessage('✅ Оба файла загружены! Теперь вы можете перейти к ручному сопоставлению или результатам.', 'success');
+                showMessage('Оба файла загружены. Теперь вы можете перейти к ручному сопоставлению или результатам.', 'success');
             }
         })
         .catch(error => {
@@ -162,7 +153,6 @@ function checkBothFilesLoaded() {
         });
 }
 
-// Проверяем статус при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     checkBothFilesLoaded();
 });
