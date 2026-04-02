@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 40px;">
+    <h2>Добро пожаловать!</h2>
+    <p style="font-size: 1.1em; margin: 20px 0; color: #666;">
+        Система автоматизации процессов перевода и восстановления студентов ЯГТУ
+    </p>
+    
+    <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 30px 0; text-align: left;">
+        <h3>🎯 Функционал системы:</h3>
+        <ul style="margin-top: 15px; line-height: 1.8;">
+            <li>✓ Загрузка учебных планов и ведомостей с оценками (XLSX, CSV)</li>
+            <li>✓ Автоматическое сопоставление дисциплин по названиям</li>
+            <li>✓ Ручная переаттестация несопоставленных дисциплин</li>
+            <li>✓ Формирование итогового списка с категориями</li>
+            <li>✓ Экспорт результатов в CSV-файл</li>
+        </ul>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('upload') }}" class="btn">📁 Начать работу</a>
+    </div>
+</div>
+{% endblock %}
