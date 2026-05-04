@@ -102,6 +102,20 @@ def mark_as_study(transcript_id, match_results):
     
     return False
 
+def _final_row_matched(transcript_disc, curriculum_disc):
+    """Одна строка итога: ведомость + дисциплина УП + семестры/объёмы."""
+    return {
+        'name': transcript_disc['original_name'],
+        'grade': transcript_disc.get('grade', ''),
+        'normalized_grade': transcript_disc.get('normalized_grade'),
+        'hours': transcript_disc.get('hours', ''),
+        'semester': transcript_disc.get('semester'),
+        'matched_to': curriculum_disc['original_name'],
+        'curriculum_hours': curriculum_disc.get('hours'),
+        'curriculum_semester': curriculum_disc.get('semester'),
+    }
+
+
 def get_final_results(match_results, curriculum_disciplines):
     """
     Формирование итогового списка по категориям
@@ -114,27 +128,27 @@ def get_final_results(match_results, curriculum_disciplines):
     
     # Добавляем автоматически сопоставленные
     for item in match_results.get('matched', []):
-        final_results['recreditable'].append({
-            'name': item['transcript_discipline']['original_name'],
-            'grade': item['transcript_discipline'].get('grade', ''),
-            'hours': item['transcript_discipline'].get('hours', ''),
-            'matched_to': item['curriculum_discipline']['original_name']
-        })
+        final_results['recreditable'].append(
+            _final_row_matched(item['transcript_discipline'], item['curriculum_discipline'])
+        )
     
     # Обрабатываем ручные сопоставления
     for item in match_results.get('manual', []):
         if item.get('status') == 'manual_matched' and item.get('selected_match'):
-            final_results['reattestation'].append({
-                'name': item['transcript_discipline']['original_name'],
-                'grade': item['transcript_discipline'].get('grade', ''),
-                'hours': item['transcript_discipline'].get('hours', ''),
-                'matched_to': item['selected_match']['original_name']
-            })
+            final_results['reattestation'].append(
+                _final_row_matched(item['transcript_discipline'], item['selected_match'])
+            )
         elif item.get('status') == 'needs_study':
-            # Добавляем дисциплину из учебного плана, которую нужно изучить
+            td = item['transcript_discipline']
             final_results['need_study'].append({
-                'name': item['transcript_discipline']['original_name'],
-                'hours': item['transcript_discipline'].get('hours', '')
+                'name': td['original_name'],
+                'hours': td.get('hours', ''),
+                'semester': td.get('semester'),
+                'grade': td.get('grade', ''),
+                'normalized_grade': td.get('normalized_grade'),
+                'curriculum_hours': None,
+                'curriculum_semester': None,
+                'matched_to': '',
             })
     
     # Добавляем дисциплины из учебного плана, которые не были сопоставлены
@@ -156,7 +170,13 @@ def get_final_results(match_results, curriculum_disciplines):
             if not already_added:
                 final_results['need_study'].append({
                     'name': curr['original_name'],
-                    'hours': curr.get('hours', '')
+                    'hours': curr.get('hours', ''),
+                    'semester': curr.get('semester'),
+                    'grade': '',
+                    'normalized_grade': None,
+                    'curriculum_hours': curr.get('hours'),
+                    'curriculum_semester': curr.get('semester'),
+                    'matched_to': '',
                 })
     
     return final_results

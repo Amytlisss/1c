@@ -111,8 +111,62 @@
     </div>
 </div>
 
+<div style="margin-top: 28px; padding: 20px; background: #f4f7fb; border-radius: 8px; border: 1px solid #d0d7e5;">
+    <h3 style="margin-bottom: 14px; font-size: 17px; color: #2c3e50;">Реквизиты для индивидуального плана (.docx)</h3>
+    <p style="color: #6c7a8a; font-size: 13px; margin-bottom: 16px;">
+        Укажите данные обучающегося. Документ формируется автоматически в стандартном формате .docx.
+    </p>
+    <form action="{{ url_for('export_plan_docx') }}" method="post" style="max-width: 720px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px;">
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                ФИО обучающегося (родительный падеж)
+                <input name="student_genitive" value="{{ plan_meta.student_genitive|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                Подпись (кратко, например Егоров Н.С.)
+                <input name="student_sign_fio" value="{{ plan_meta.student_sign_fio|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px; grid-column: 1 / -1;">
+                Направление подготовки
+                <input name="direction" value="{{ plan_meta.direction|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                Группа
+                <input name="group" value="{{ plan_meta.group|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                Направленность (профиль)
+                <input name="profile" value="{{ plan_meta.profile|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px; grid-column: 1 / -1;">
+                Срок ликвидации разницы
+                <input name="deadline" value="{{ plan_meta.deadline|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                Год в датах согласования
+                <input name="sign_year" value="{{ plan_meta.sign_year|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                ФИО проректора (строка утверждения)
+                <input name="prorector_fio" value="{{ plan_meta.prorector_fio|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px; grid-column: 1 / -1;">
+                Должность (зам. директора)
+                <input name="deputy_title" value="{{ plan_meta.deputy_title|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+            <label style="display: flex; flex-direction: column; font-size: 13px; gap: 4px;">
+                ФИО зам. директора
+                <input name="deputy_fio" value="{{ plan_meta.deputy_fio|e }}" style="padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px;">
+            </label>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="btn">Скачать индивидуальный план (.docx)</button>
+        </div>
+    </form>
+</div>
+
 <div style="text-align: center; margin-top: 24px; padding: 20px; background: #f8f9fc; border-radius: 8px; border: 1px solid #e0e7f0;">
-    <a href="{{ url_for('export_results') }}" class="btn">Сохранить результат (CSV)</a>
+    <a href="{{ url_for('export_results') }}" class="btn btn-secondary">Сохранить результат (CSV)</a>
     <a href="{{ url_for('index') }}" class="btn btn-secondary">На главную</a>
     <a href="{{ url_for('manual_matching') }}" class="btn btn-secondary">Ручное сопоставление</a>
 </div>

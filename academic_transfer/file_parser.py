@@ -53,6 +53,13 @@ def parse_curriculum(file_path):
         
         if name_col is None:
             raise ValueError("Не найдена колонка с названиями дисциплин")
+
+        semester_col = None
+        for col in df.columns:
+            cl = str(col).lower()
+            if any(k in cl for k in ('семестр', 'semester')) and 'дисциплин' not in cl:
+                semester_col = col
+                break
         
         # Формируем список дисциплин
         disciplines = []
@@ -96,13 +103,28 @@ def parse_curriculum(file_path):
                 clean_name = f"{clean_name} (семестр {seen_names[clean_name]})"
             else:
                 seen_names[clean_name] = 1
+
+            semester = None
+            if semester_col is not None and pd.notna(row[semester_col]):
+                try:
+                    v = row[semester_col]
+                    if isinstance(v, (int, float)) and not pd.isna(v):
+                        semester = int(v) if float(v) == int(float(v)) else float(v)
+                    else:
+                        s = str(v).strip()
+                        if s.isdigit():
+                            semester = int(s)
+                        elif s:
+                            semester = s
+                except (TypeError, ValueError):
+                    semester = str(row[semester_col]).strip() or None
             
             discipline = {
                 'id': idx,
                 'name': normalize_name(clean_name),
                 'original_name': clean_name,
                 'hours': hours,
-                'semester': None  # Можно добавить парсинг семестра
+                'semester': semester,
             }
             disciplines.append(discipline)
         
@@ -131,6 +153,7 @@ def parse_transcript(file_path):
         hours_col = None
         status_col = None
         
+        semester_col = None
         for col in df.columns:
             col_lower = col.lower()
             if any(keyword in col_lower for keyword in ['наименование предмета', 'предмет', 'дисциплина', 'name', 'discipline']):
@@ -141,6 +164,8 @@ def parse_transcript(file_path):
                 hours_col = col
             if any(keyword in col_lower for keyword in ['вид контроля', 'status']):
                 status_col = col
+            if any(keyword in col_lower for keyword in ['семестр', 'semester']) and 'дисциплин' not in col_lower:
+                semester_col = col
         
         if name_col is None:
             raise ValueError("Не найдена колонка с названиями дисциплин")
@@ -189,6 +214,21 @@ def parse_transcript(file_path):
                     hours = float(row[hours_col])
                 except:
                     pass
+
+            semester = None
+            if semester_col is not None and pd.notna(row[semester_col]):
+                try:
+                    v = row[semester_col]
+                    if isinstance(v, (int, float)) and not pd.isna(v):
+                        semester = int(v) if float(v) == int(float(v)) else float(v)
+                    else:
+                        s = str(v).strip()
+                        if s.isdigit():
+                            semester = int(s)
+                        elif s:
+                            semester = s
+                except (TypeError, ValueError):
+                    semester = str(row[semester_col]).strip() or None
             
             discipline = {
                 'id': idx,
@@ -197,7 +237,7 @@ def parse_transcript(file_path):
                 'grade': grade,
                 'normalized_grade': normalized_grade,
                 'hours': hours,
-                'semester': None  # Можно добавить парсинг семестра
+                'semester': semester,
             }
             disciplines.append(discipline)
         

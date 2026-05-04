@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, Response
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, Response, send_file
 import os
 import shutil
 import csv
@@ -6,6 +6,9 @@ from io import StringIO
 from werkzeug.utils import secure_filename
 from file_parser import parse_curriculum, parse_transcript
 from matcher import auto_match, apply_manual_match, mark_as_study, get_final_results
+from plan_document import build_individual_plan_docx, DEFAULT_PLAN_META
+
+PLAN_META_KEYS = list(DEFAULT_PLAN_META.keys())
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here-change-in-production'
@@ -225,7 +228,8 @@ def results():
         'need_study': len(final_results.get('need_study', []))
     }
     
-    return render_template('results.html', results=final_results, stats=stats)
+    plan_meta = {**DEFAULT_PLAN_META, **session.get('plan_meta', {})}
+    return render_template('results.html', results=final_results, stats=stats, plan_meta=plan_meta)
 
 @app.route('/export_results')
 def export_results():
@@ -299,6 +303,30 @@ def export_results():
             "Content-Disposition": "attachment;filename=results.csv",
             "Content-Type": "text/csv; charset=utf-8"
         }
+    )
+
+@app.route('/export_plan_docx', methods=['POST'])
+def export_plan_docx():
+    if 'match_results' not in session:
+        return redirect(url_for('upload'))
+    match_results = session.get('match_results', {})
+    curriculum = session.get('curriculum', [])
+    final_results = get_final_results(match_results, curriculum)
+
+    meta = {**DEFAULT_PLAN_META}
+    for k in PLAN_META_KEYS:
+        v = request.form.get(k, '').strip()
+        if v:
+            meta[k] = v
+    session['plan_meta'] = {k: meta.get(k, '') for k in PLAN_META_KEYS}
+    session.modified = True
+
+    buf = build_individual_plan_docx(final_results, meta)
+    return send_file(
+        buf,
+        as_attachment=True,
+        download_name='individual_plan.docx',
+        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     )
 
 @app.route('/reset')
