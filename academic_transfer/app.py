@@ -6,7 +6,7 @@ from io import StringIO
 from werkzeug.utils import secure_filename
 from file_parser import parse_curriculum, parse_transcript
 from matcher import auto_match, apply_manual_match, mark_as_study, get_final_results
-from plan_document import build_individual_plan_docx, DEFAULT_PLAN_META
+from plan_document import build_individual_plan_docx, DEFAULT_PLAN_META, PLAN_META_KEYS
 
 PLAN_META_KEYS = list(DEFAULT_PLAN_META.keys())
 
@@ -309,19 +309,30 @@ def export_results():
 def export_plan_docx():
     if 'match_results' not in session:
         return redirect(url_for('upload'))
+    
     match_results = session.get('match_results', {})
     curriculum = session.get('curriculum', [])
+    transcript = session.get('transcript', [])
+    
     final_results = get_final_results(match_results, curriculum)
-
+    
     meta = {**DEFAULT_PLAN_META}
     for k in PLAN_META_KEYS:
         v = request.form.get(k, '').strip()
         if v:
             meta[k] = v
+    
     session['plan_meta'] = {k: meta.get(k, '') for k in PLAN_META_KEYS}
     session.modified = True
-
-    buf = build_individual_plan_docx(final_results, meta)
+    
+    buf = build_individual_plan_docx(
+        final_results=final_results,
+        transcript_disciplines=transcript,
+        match_results=match_results,
+        curriculum=curriculum,
+        meta=meta
+    )
+    
     return send_file(
         buf,
         as_attachment=True,
