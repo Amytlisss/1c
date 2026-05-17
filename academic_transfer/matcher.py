@@ -72,12 +72,16 @@ def apply_manual_match(match_results, transcript_id, curriculum_discipline_id, c
     """
     Применение ручного сопоставления
     """
+    # Преобразуем ID к строкам для единообразного сравнения
+    transcript_id = str(transcript_id)
+    curriculum_discipline_id = str(curriculum_discipline_id)
+    
     for item in match_results.get('manual', []):
-        if item['transcript_discipline']['id'] == transcript_id:
+        if str(item['transcript_discipline']['id']) == transcript_id:
             # Находим выбранную дисциплину из учебного плана
             selected = None
             for curr in curriculum_disciplines:
-                if curr['id'] == curriculum_discipline_id:
+                if str(curr['id']) == curriculum_discipline_id:
                     selected = curr
                     break
             
@@ -94,8 +98,10 @@ def mark_as_study(transcript_id, match_results):
     """
     Пометка дисциплины как "требует изучения"
     """
+    transcript_id = str(transcript_id)
+    
     for item in match_results.get('manual', []):
-        if item['transcript_discipline']['id'] == transcript_id:
+        if str(item['transcript_discipline']['id']) == transcript_id:
             item['status'] = 'needs_study'
             item['selected_match'] = None
             return True

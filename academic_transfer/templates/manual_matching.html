@@ -42,8 +42,8 @@
                     </optgroup>
                 </select>
                 <div style="display: flex; gap: 10px; margin-top: 12px;">
-                    <button onclick="matchDiscipline('{{ item.id }}')" class="btn" style="flex: 1;">Сохранить</button>
-                    <button onclick="markAsStudy('{{ item.id }}')" class="btn btn-secondary" style="flex: 1;">Требует изучения</button>
+                    <button onclick="matchDiscipline(this)" data-id="{{ item.id }}" class="btn match-btn" style="flex: 1;">Сохранить</button>
+                    <button onclick="markAsStudy(this)" data-id="{{ item.id }}" class="btn btn-secondary study-btn" style="flex: 1;">Требует изучения</button>
                 </div>
             </div>
         </div>
@@ -64,7 +64,8 @@
 {% endif %}
 
 <script>
-function matchDiscipline(transcriptId) {
+function matchDiscipline(button) {
+    const transcriptId = button.getAttribute('data-id');
     const select = document.getElementById('select-' + transcriptId);
     const curriculumId = select.value;
     
@@ -82,8 +83,8 @@ function matchDiscipline(transcriptId) {
         },
         body: JSON.stringify({
             action: 'match',
-            transcript_id: parseInt(transcriptId),
-            curriculum_id: parseInt(curriculumId)
+            transcript_id: transcriptId,
+            curriculum_id: curriculumId
         })
     })
     .then(response => response.json())
@@ -91,7 +92,9 @@ function matchDiscipline(transcriptId) {
         hideLoading();
         if (data.success) {
             showMessage(data.message, 'success');
-            document.getElementById('row-' + transcriptId).style.opacity = '0.5';
+            const row = document.getElementById('row-' + transcriptId);
+            row.style.opacity = '0.5';
+            row.style.backgroundColor = '#e8f5e9';
             setTimeout(() => location.reload(), 1000);
         } else {
             showMessage('Ошибка: ' + (data.message || 'При сохранении'), 'error');
@@ -103,7 +106,9 @@ function matchDiscipline(transcriptId) {
     });
 }
 
-function markAsStudy(transcriptId) {
+function markAsStudy(button) {
+    const transcriptId = button.getAttribute('data-id');
+    
     if (!confirm('Отметить эту дисциплину как требующую изучения?')) {
         return;
     }
@@ -117,7 +122,7 @@ function markAsStudy(transcriptId) {
         },
         body: JSON.stringify({
             action: 'study',
-            transcript_id: parseInt(transcriptId)
+            transcript_id: transcriptId
         })
     })
     .then(response => response.json())
@@ -125,7 +130,9 @@ function markAsStudy(transcriptId) {
         hideLoading();
         if (data.success) {
             showMessage(data.message, 'success');
-            document.getElementById('row-' + transcriptId).style.opacity = '0.5';
+            const row = document.getElementById('row-' + transcriptId);
+            row.style.opacity = '0.5';
+            row.style.backgroundColor = '#fff3e0';
             setTimeout(() => location.reload(), 1000);
         } else {
             showMessage('Ошибка: ' + (data.message || 'При сохранении'), 'error');
